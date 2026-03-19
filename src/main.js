@@ -11,48 +11,47 @@ import { JobUI } from "./ui/JobUI.js";
 import { JobSystem } from "./systems/JobSystem.js";
 import { ProblemSystem } from "./systems/ProblemSystem.js";
 
-const car = new Car("Carro do Cliente");
+const problemSystem = new ProblemSystem();
 
-car.install(
-  "engine",
-  new Part({
-    id: "engine",
-    name: "Motor",
-    type: "engine",
-    price: 800,
-    condition: Math.random() < 0.5 ? 0 : 100,
-  }),
-);
+// exemplo de carro (ajuste pro seu real)
+const car = {
+  parts: [
+    { id: "battery", condition: 0.2 },
+    { id: "spark_plug", condition: 0.3 },
+    { id: "air_filter", condition: 0.9 },
+    { id: "brake_pad", condition: 0.2 },
+    { id: "oil_filter", condition: 0.6 },
+  ],
+};
 
-car.install(
-  "battery",
-  new Part({
-    id: "battery",
-    name: "Bateria",
-    type: "battery",
-    price: 150,
-    condition: Math.random() < 0.5 ? 0 : 100,
-  }),
-);
+// gera problemas
+problemSystem.generate(car, 3);
 
-car.install(
-  "wheelFL",
-  new Part({
-    id: "wheel",
-    name: "Roda",
-    type: "wheel",
-    price: 120,
-    condition: Math.random() < 0.5 ? 0 : 100,
-  }),
-);
+// mostra problemas
+problemSystem.debug(car);
+
+// simula reparo
+car.parts.find((p) => p.id === "battery").condition = 1;
+
+// atualiza estado
+problemSystem.update(car);
+
+// mostra novamente
+problemSystem.debug(car);
+
+// verifica fim
+if (problemSystem.isFixed(car)) {
+  console.log("Carro consertado!");
+} else {
+  console.log("Ainda há problemas...");
+}
+
+// recompensa
+console.log("Pagamento:", problemSystem.getReward(car));
 
 GameState.currentCar = car;
 
 JobSystem.createJob();
-
-const problemSystem = new ProblemSystem();
-
-problemSystem.generateProblems(car, 3);
 
 function updateMoney() {
   document.getElementById("money-value").innerText = GameState.money;

@@ -1,11 +1,13 @@
-import { problemsDatabase } from "../data/problems.js";
+import PROBLEMS from "../data/problems.js";
 
-export class ProblemSystem {
+class ProblemSystem {
   constructor() {
-    this.database = problemsDatabase;
+    this.database = PROBLEMS;
   }
 
-  generateProblems(car, amount = 2) {
+  generate(car, amount = 2) {
+    if (!car) return;
+
     const shuffled = [...this.database].sort(() => Math.random() - 0.5);
 
     const selected = shuffled.slice(0, amount);
@@ -13,18 +15,20 @@ export class ProblemSystem {
     car.problems = selected.map((problem) => ({
       id: problem.id,
       name: problem.name,
-      affectedPart: problem.affectedPart,
+      partId: problem.partId,
       minCondition: problem.minCondition,
       reward: problem.reward,
       resolved: false,
     }));
   }
 
-  updateProblems(car) {
-    if (!car.problems) return;
+  update(car) {
+    if (!car || !car.parts || !car.problems) return;
 
-    for (const problem of car.problems) {
-      const part = this.getPart(car, problem.affectedPart);
+    for (let i = 0; i < car.problems.length; i++) {
+      const problem = car.problems[i];
+
+      const part = car.parts.find((p) => p.id === problem.partId);
 
       if (!part) continue;
 
@@ -36,44 +40,52 @@ export class ProblemSystem {
     }
   }
 
-  getPart(car, partId) {
-    if (!car.parts) return null;
-    return car.parts.find((p) => p.id === partId);
+  isFixed(car) {
+    if (!car || !car.problems || car.problems.length === 0) {
+      return false;
+    }
+
+    return car.problems.every((p) => p.resolved === true);
   }
 
-  getActiveProblems(car) {
-    if (!car.problems) return [];
+  getActive(car) {
+    if (!car || !car.problems) return [];
+
     return car.problems.filter((p) => !p.resolved);
   }
 
-  isCarFixed(car) {
-    if (!car.problems || car.problems.length === 0) return false;
-    return car.problems.every((p) => p.resolved);
-  }
+  getReward(car) {
+    if (!car || !car.problems) return 0;
 
-  getTotalReward(car) {
-    if (!car.problems) return 0;
+    let total = 0;
 
-    return car.problems.reduce((total, p) => {
-      if (p.resolved) {
-        return total + p.reward;
+    for (let i = 0; i < car.problems.length; i++) {
+      const problem = car.problems[i];
+
+      if (problem.resolved) {
+        total += problem.reward;
       }
-      return total;
-    }, 0);
+    }
+
+    return total;
   }
 
-  debugProblems(car) {
-    console.log("=== PROBLEMAS DO CARRO ===");
+  debug(car) {
+    console.log("========== PROBLEMAS DO CARRO ==========");
 
-    if (!car.problems) {
-      console.log("Nenhum problema gerado.");
+    if (!car || !car.problems || car.problems.length === 0) {
+      console.log("Nenhum problema encontrado.");
       return;
     }
 
-    for (const problem of car.problems) {
-      console.log(
-        `${problem.name} | Peça: ${problem.affectedPart} | Resolvido: ${problem.resolved}`,
-      );
+    for (let i = 0; i < car.problems.length; i++) {
+      const p = car.problems[i];
+
+      console.log(`[${p.resolved ? "OK" : "X"}] ${p.name} | peça: ${p.partId}`);
     }
+
+    console.log("========================================");
   }
 }
+
+export default ProblemSystem;

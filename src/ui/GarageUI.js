@@ -1,89 +1,107 @@
-import { GameState } from "../core/GameState.js";
-import { Notifications } from "./Notifications.js";
-import { Tools } from "../game/Tools.js";
-import { ToolRules } from "../game/toolRules.js";
-import { DependencySystem } from "../game/DependencySystem.js";
+class GarageUI {
+  constructor(rootId = "app") {
+    this.root = document.getElementById(rootId);
+  }
 
-export const GarageUI = {
-  render() {
-    const carView = document.getElementById("car-view");
-    carView.innerHTML = "";
+  render(car, problemSystem) {
+    if (!this.root) return;
 
-    const car = GameState.currentCar;
+    let html = `
+      <h1>🔧 Oficina Mecânica</h1>
+    `;
 
-    for (const slot in car.slots) {
-      const part = car.slots[slot];
+    // =========================
+    // 🚗 STATUS DO CARRO
+    // =========================
+    html += `
+      <section>
+        <h2>🚗 Carro</h2>
+        <p>Total de peças: ${car.parts.length}</p>
+      </section>
+    `;
 
-      const div = document.createElement("div");
+    // =========================
+    // ⚠️ PROBLEMAS (COM DIAGNÓSTICO)
+    // =========================
+    html += `<section><h2>⚠️ Diagnóstico</h2>`;
 
-      div.innerHTML = `
-            <b>${slot}</b><br>
-            ${part ? part.name : "(vazio)"}
-            `;
+    const discovered = problemSystem.getDiscovered(car);
 
-      // 🔍 BOTÃO INSPECIONAR
-      const inspectBtn = document.createElement("button");
-      inspectBtn.innerText = "Inspecionar";
-
-      inspectBtn.onclick = () => {
-        if (!part) {
-          Notifications.show("Sem peça aqui");
-          return;
-        }
-
-        if (part.condition <= 0) {
-          Notifications.show(`${part.name} está QUEBRADA`);
-        } else {
-          Notifications.show(`${part.name} está OK`);
-        }
-      };
-
-      // 🔧 BOTÃO REMOVER
-      const removeBtn = document.createElement("button");
-      removeBtn.innerText = "Remover";
-
-      removeBtn.onclick = () => {
-        if (!part) return;
-
-        const requiredTool = ToolRules[slot];
-
-        // 🔧 valida ferramenta
-        if (Tools.selected !== requiredTool) {
-          Notifications.show("Ferramenta errada!");
-          return;
-        }
-
-        // 🔥 valida dependência
-        const check = DependencySystem.canRemove(car, slot);
-
-        if (!check.allowed) {
-          Notifications.show("Remova primeiro: " + check.blocking);
-
-          return;
-        }
-
-        GameState.inventory.push(part);
-        car.remove(slot);
-
-        Notifications.show("Peça removida");
-
-        this.render();
-      };
-
-      div.appendChild(inspectBtn);
-      div.appendChild(removeBtn);
-
-      carView.appendChild(div);
+    if (discovered.length === 0) {
+      html += `<p>Nenhum problema identificado ainda...</p>`;
+    } else {
+      discovered.forEach((problem) => {
+        html += `
+      <div style="border:1px solid #ccc; margin:5px; padding:5px;">
+        <strong>${problem.name}</strong><br/>
+        Peça: ${problem.partId}<br/>
+        Status: ${problem.resolved ? "✅ Resolvido" : "❌ Pendente"}
+      </div>
+    `;
+      });
     }
 
-    function updateToolUI() {
-      document.getElementById("current-tool").innerText =
-        "Atual: " + Tools.selected;
-    }
-    updateToolUI();
+    html += `
+  <button onclick="window.inspectCar()">🔍 Inspecionar</button>
+  <button onclick="window.scanCar()">💻 Scanner</button>
+`;
 
-    if (part && part.condition <= 0) {
-      div.style.color = "red";
+    html += `</section>`;
+
+    // =========================
+    // 🔩 LISTA DE PEÇAS
+    // =========================
+    html += `<section><h2>🔩 Peças</h2>`;
+
+    car.parts.forEach((part) => {
+      html += `
+        <div style="border:1px solid #999; margin:5px; padding:5px;">
+          <h3>${part.name || part.id}</h3>
+          <p>Condição: ${Math.round(part.condition * 100)}%</p>
+
+          <button onclick="window.removePart('${part.id}')">
+            Remover
+          </button>
+
+          <button onclick="window.repairPart('${part.id}')">
+            Reparar
+          </button>
+        </div>
+      `;
+    });
+
+    html += `</section>`;
+
+    // =========================
+    // 🧪 TESTES
+    // =========================
+    html += `<section><h2>🧪 Testes</h2>
+
+    <button onclick="window.testEngine()">🔧 Testar motor</button>
+    <button onclick="window.testDrive()">🚗 Test drive</button>
+    </section>`;
+
+    // =========================
+    // 🏁 STATUS FINAL
+    // =========================
+    html += `<section><h2>🏁 Status</h2>`;
+
+    if (problemSystem && problemSystem.isFixed(car)) {
+      const reward = problemSystem.getReward(car);
+
+      html += `
+        <p style="color:green;"><strong>Carro consertado!</strong></p>
+        <p>Pagamento: $${reward}</p>
+      `;
+    } else {
+      html += `<p>Carro ainda com problemas...</p>`;
     }
-  },
-};
+
+    html += `</section>`;
+
+    // render final
+    this.root.innerHTML = html;
+  }
+}
+
+export default GarageUI;

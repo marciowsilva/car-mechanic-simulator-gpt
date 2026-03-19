@@ -1,70 +1,92 @@
-import { GameState } from "./core/GameState.js";
-import { Car } from "./game/Car.js";
-import { Part } from "./game/Part.js";
-import { Tools } from "./game/Tools.js";
+import UIManager from "./ui/UIManager.js";
+import GarageScreen from "./ui/screens/GarageScreen.js";
+import ClientScreen from "./ui/screens/ClientScreen.js";
+import InventoryScreen from "./ui/screens/InventoryScreen.js";
+import ShopScreen from "./ui/screens/ShopScreen.js";
 
-import { GarageUI } from "./ui/GarageUI.js";
-import { InventoryUI } from "./ui/InventoryUI.js";
-import { ShopUI } from "./ui/ShopUI.js";
-import { JobUI } from "./ui/JobUI.js";
-
-import { JobSystem } from "./systems/JobSystem.js";
 import ProblemSystem from "./systems/ProblemSystem.js";
+import DiagnosisSystem from "./systems/DiagnosisSystem.js";
+import TestSystem from "./systems/TestSystem.js";
 
-const problemSystem = new ProblemSystem();
-
-// exemplo de carro (ajuste pro seu real)
+// =========================
+// ESTADO
+// =========================
 const car = {
   parts: [
-    { id: "battery", condition: 0.2 },
-    { id: "spark_plug", condition: 0.3 },
-    { id: "air_filter", condition: 0.9 },
-    { id: "brake_pad", condition: 0.2 },
-    { id: "oil_filter", condition: 0.6 },
+    { id: "battery", name: "Bateria", condition: 0.2 },
+    { id: "spark_plug", name: "Vela", condition: 0.3 },
+    { id: "air_filter", name: "Filtro de Ar", condition: 0.9 },
+    { id: "brake_pad", name: "Freio", condition: 0.2 },
   ],
+  problems: [],
 };
 
-// gera problemas
-problemSystem.generate(car, 3);
+// =========================
+// SISTEMAS
+// =========================
+const problemSystem = new ProblemSystem();
+const diagnosisSystem = new DiagnosisSystem();
+const testSystem = new TestSystem();
 
-// mostra problemas
-problemSystem.debug(car);
+// =========================
+// UI
+// =========================
+const ui = new UIManager("app");
 
-// simula reparo
-car.parts.find((p) => p.id === "battery").condition = 1;
+ui.register("garage", new GarageScreen());
+ui.register("client", new ClientScreen());
+ui.register("inventory", new InventoryScreen());
+ui.register("shop", new ShopScreen());
 
-// atualiza estado
-problemSystem.update(car);
+// =========================
+// INIT
+// =========================
+function init() {
+  problemSystem.generate(car, 3);
+  problemSystem.update(car);
 
-// mostra novamente
-problemSystem.debug(car);
-
-// verifica fim
-if (problemSystem.isFixed(car)) {
-  console.log("Carro consertado!");
-} else {
-  console.log("Ainda há problemas...");
+  ui.show("garage", { car, problemSystem });
 }
 
-// recompensa
-console.log("Pagamento:", problemSystem.getReward(car));
+// =========================
+// NAVEGAÇÃO
+// =========================
+window.navigate = function (screen) {
+  ui.show(screen, { car, problemSystem });
+};
 
-GameState.currentCar = car;
+// =========================
+// AÇÕES
+// =========================
+window.repairPart = function (id) {
+  const part = car.parts.find((p) => p.id === id);
+  if (part) part.condition = 1;
 
-JobSystem.createJob();
+  problemSystem.update(car);
+  ui.show("garage", { car, problemSystem });
+};
 
-function updateMoney() {
-  document.getElementById("money-value").innerText = GameState.money;
-}
+window.inspectCar = function () {
+  diagnosisSystem.inspect(car);
+  ui.show("garage", { car, problemSystem });
+};
 
-function render() {
-  updateMoney();
+window.scanCar = function () {
+  diagnosisSystem.scan(car);
+  ui.show("garage", { car, problemSystem });
+};
 
-  GarageUI.render();
-  InventoryUI.render();
-  ShopUI.render();
-  JobUI.render();
-}
+window.testEngine = function () {
+  const results = testSystem.runEngineTest(car);
+  alert(results.join("\n"));
+};
 
-setInterval(render, 300);
-window.selectTool = (tool) => Tools.select(tool);
+window.testDrive = function () {
+  const results = testSystem.runDriveTest(car);
+  alert(results.join("\n"));
+};
+
+// =========================
+// START
+// =========================
+init();

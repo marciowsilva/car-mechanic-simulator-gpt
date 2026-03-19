@@ -5,6 +5,8 @@ const PROBLEMS = [
     partId: "battery",
     minCondition: 0.3,
     reward: 120,
+    methods: ["inspection"],
+    symptoms: ["no_start"],
   },
   {
     id: "worn_spark_plug",
@@ -12,6 +14,8 @@ const PROBLEMS = [
     partId: "spark_plug",
     minCondition: 0.4,
     reward: 90,
+    methods: ["inspection", "scanner"],
+    symptoms: ["engine_misfire"],
   },
   {
     id: "dirty_air_filter",
@@ -19,20 +23,17 @@ const PROBLEMS = [
     partId: "air_filter",
     minCondition: 0.5,
     reward: 70,
+    methods: ["inspection"],
+    symptoms: ["low_power"],
   },
   {
     id: "bad_brake_pad",
-    name: "Pastilha de freio gasta",
+    name: "Freio gasto",
     partId: "brake_pad",
     minCondition: 0.4,
     reward: 150,
-  },
-  {
-    id: "clogged_oil_filter",
-    name: "Filtro de óleo entupido",
-    partId: "oil_filter",
-    minCondition: 0.5,
-    reward: 110,
+    methods: ["inspection"],
+    symptoms: ["brake_noise"],
   },
 ];
 

@@ -9,6 +9,7 @@ import { ShopUI } from "./ui/ShopUI.js";
 import { JobUI } from "./ui/JobUI.js";
 
 import { JobSystem } from "./systems/JobSystem.js";
+import { ProblemSystem } from "./systems/ProblemSystem.js";
 
 const car = new Car("Carro do Cliente");
 
@@ -48,6 +49,10 @@ car.install(
 GameState.currentCar = car;
 
 JobSystem.createJob();
+
+const problemSystem = new ProblemSystem();
+
+problemSystem.generateProblems(car, 3);
 
 function updateMoney() {
   document.getElementById("money-value").innerText = GameState.money;

@@ -11,6 +11,8 @@ export class Car {
       wheelRL: null,
       wheelRR: null,
     };
+
+    this.problems = [];
   }
 
   install(slot, part) {
@@ -21,5 +23,9 @@ export class Car {
     const part = this.slots[slot];
     this.slots[slot] = null;
     return part;
+  }
+
+  getPart(partId) {
+    return this.parts.find((p) => p.id === partId);
   }
 }

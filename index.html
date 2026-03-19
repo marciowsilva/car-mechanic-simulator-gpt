@@ -2,52 +2,76 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Car Mechanic Simulator</title>
 
-    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial;
+        background: #1e1e1e;
+        color: #fff;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px;
+        background: #111;
+        border-bottom: 1px solid #333;
+      }
+
+      .menu {
+        display: flex;
+        gap: 10px;
+        padding: 10px;
+        background: #222;
+      }
+
+      .menu button {
+        padding: 10px;
+        background: #333;
+        border: none;
+        color: white;
+        cursor: pointer;
+      }
+
+      .menu button:hover {
+        background: #555;
+      }
+
+      .content {
+        padding: 20px;
+        min-height: 400px;
+      }
+
+      .tools {
+        padding: 10px;
+        background: #111;
+        border-top: 1px solid #333;
+      }
+
+      .card {
+        background: #2a2a2a;
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 5px;
+      }
+
+      .actions {
+        margin: 10px 0;
+      }
+
+      button {
+        margin-right: 5px;
+      }
+    </style>
   </head>
 
   <body>
-    <header>
-      <h1>Car Mechanic Simulator</h1>
-      <div id="money">💰 Dinheiro: $<span id="money-value">0</span></div>
-    </header>
+    <!-- 🔥 A UI inteira será renderizada aqui -->
+    <div id="app"></div>
 
-    <main>
-      <section id="garage">
-        <h2>🚗 Garagem</h2>
-        <div id="car-view"></div>
-      </section>
-
-      <section id="job">
-        <h2>👨‍🔧 Cliente</h2>
-        <div id="job-description"></div>
-      </section>
-
-      <section id="inventory">
-        <h2>📦 Inventário</h2>
-        <div id="inventory-list"></div>
-      </section>
-
-      <section id="shop">
-        <h2>🛒 Loja</h2>
-        <div id="shop-list"></div>
-      </section>
-
-      <section id="tools">
-        <h2>🧰 Ferramentas</h2>
-
-        <button onclick="window.selectTool('wrench')">🔧 Chave inglesa</button>
-        <button onclick="window.selectTool('wheel')">🛞 Chave de roda</button>
-
-        <div id="current-tool"></div>
-      </section>
-    </main>
-
-    <div id="notifications"></div>
-
-    <script type="module" src="src/main.js"></script>
+    <!-- IMPORTANTE: script no final -->
+    <script type="module" src="./src/main.js"></script>
   </body>
 </html>

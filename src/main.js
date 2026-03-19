@@ -7,9 +7,10 @@ import ShopScreen from "./ui/screens/ShopScreen.js";
 import ProblemSystem from "./systems/ProblemSystem.js";
 import DiagnosisSystem from "./systems/DiagnosisSystem.js";
 import TestSystem from "./systems/TestSystem.js";
+import JobSystem from "./systems/JobSystem.js";
 
 // =========================
-// ESTADO
+// 🚗 ESTADO DO JOGO
 // =========================
 const car = {
   parts: [
@@ -22,14 +23,17 @@ const car = {
 };
 
 // =========================
-// SISTEMAS
+// ⚙️ SISTEMAS
 // =========================
 const problemSystem = new ProblemSystem();
 const diagnosisSystem = new DiagnosisSystem();
 const testSystem = new TestSystem();
+const jobSystem = new JobSystem(problemSystem);
+let money = 0;
+window.money = money;
 
 // =========================
-// UI
+// 🖥️ UI MANAGER
 // =========================
 const ui = new UIManager("app");
 
@@ -39,28 +43,31 @@ ui.register("inventory", new InventoryScreen());
 ui.register("shop", new ShopScreen());
 
 // =========================
-// INIT
+// 🚀 INICIALIZAÇÃO
 // =========================
 function init() {
   problemSystem.generate(car, 3);
   problemSystem.update(car);
 
-  ui.show("garage", { car, problemSystem });
+  ui.show("client", { jobSystem });
 }
 
 // =========================
-// NAVEGAÇÃO
+// 🔄 NAVEGAÇÃO
 // =========================
 window.navigate = function (screen) {
-  ui.show(screen, { car, problemSystem });
+  ui.show(screen, { car, problemSystem, jobSystem });
 };
 
 // =========================
-// AÇÕES
+// 🔧 AÇÕES DO JOGO
 // =========================
 window.repairPart = function (id) {
   const part = car.parts.find((p) => p.id === id);
-  if (part) part.condition = 1;
+
+  if (!part) return;
+
+  part.condition = 1;
 
   problemSystem.update(car);
   ui.show("garage", { car, problemSystem });
@@ -86,7 +93,33 @@ window.testDrive = function () {
   alert(results.join("\n"));
 };
 
+window.generateJob = function () {
+  jobSystem.generateJob();
+  ui.show("client", { jobSystem });
+};
+
+window.acceptJob = function () {
+  jobSystem.acceptJob(car);
+  ui.show("garage", { car, problemSystem, jobSystem });
+};
+
+window.completeJob = function () {
+  const success = jobSystem.completeJob(car);
+
+  if (success) {
+    money += jobSystem.currentJob.reward;
+    window.money = money;
+
+    alert("Serviço concluído! 💰");
+    jobSystem.currentJob = null;
+  } else {
+    alert("Ainda há problemas no carro!");
+  }
+
+  ui.show("client", { jobSystem });
+};
+
 // =========================
-// START
+// ▶️ START
 // =========================
 init();

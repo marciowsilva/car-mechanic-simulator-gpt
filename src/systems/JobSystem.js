@@ -1,47 +1,57 @@
-import { GameState } from "../core/GameState.js";
-import { Notifications } from "../ui/Notifications.js";
+import JOBS from "../data/jobs.js";
 
-export const JobSystem = {
-  currentJob: null,
+class JobSystem {
+  constructor(problemSystem) {
+    this.jobs = JOBS;
+    this.currentJob = null;
+    this.problemSystem = problemSystem;
+  }
 
-  createJob() {
-    const jobs = [
-      { problem: "engine", reward: 900, description: "Trocar motor" },
-      { problem: "battery", reward: 300, description: "Trocar bateria" },
-      { problem: "wheel", reward: 200, description: "Trocar roda" },
-    ];
+  generateJob() {
+    const job = this.jobs[Math.floor(Math.random() * this.jobs.length)];
 
-    this.currentJob = jobs[Math.floor(Math.random() * jobs.length)];
+    this.currentJob = {
+      ...job,
+      accepted: false,
+      completed: false,
+    };
 
-    Notifications.show("Novo cliente!");
-  },
+    return this.currentJob;
+  }
 
-  checkCompletion(car) {
+  acceptJob(car) {
     if (!this.currentJob) return;
 
-    const type = this.currentJob.problem;
+    this.currentJob.accepted = true;
 
-    let fixed = false;
+    // aplica problemas no carro
+    car.problems = [];
 
-    for (const slot in car.slots) {
-      const part = car.slots[slot];
+    this.problemSystem.database
+      .filter((p) => this.currentJob.problems.includes(p.id))
+      .forEach((problem) => {
+        car.problems.push({
+          ...problem,
+          resolved: false,
+          discovered: false,
+        });
+      });
 
-      if (part && part.type === type && part.condition > 0) {
-        fixed = true;
-      }
+    this.problemSystem.update(car);
+  }
 
-      if (part && part.type === type && part.condition <= 0) {
-        fixed = false;
-        break;
-      }
+  completeJob(car) {
+    if (!this.currentJob) return false;
+
+    const allFixed = this.problemSystem.isFixed(car);
+
+    if (allFixed) {
+      this.currentJob.completed = true;
+      return true;
     }
 
-    if (fixed) {
-      GameState.money += this.currentJob.reward;
+    return false;
+  }
+}
 
-      Notifications.show("Serviço concluído!");
-
-      this.createJob();
-    }
-  },
-};
+export default JobSystem;

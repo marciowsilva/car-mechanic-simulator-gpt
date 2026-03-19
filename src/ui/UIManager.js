@@ -12,25 +12,37 @@ class UIManager {
   show(name, context = {}) {
     const screen = this.screens[name];
 
-    if (!screen) {
-      console.error("Tela não encontrada:", name);
-      return;
-    }
+    if (!screen) return;
 
     this.currentScreen = name;
 
     this.root.innerHTML = `
-      <div class="topbar">
+    <div class="layout">
+
+      <header class="header">
+        <h1>🔧 Car Mechanic Simulator</h1>
+        <div class="money">💰 $${window.money || 0}</div>
+      </header>
+
+      <nav class="menu">
         <button onclick="window.navigate('garage')">🚗 Garagem</button>
         <button onclick="window.navigate('client')">👤 Cliente</button>
         <button onclick="window.navigate('inventory')">📦 Inventário</button>
         <button onclick="window.navigate('shop')">🛒 Loja</button>
-      </div>
+      </nav>
 
-      <div class="content">
+      <main class="content">
         ${screen.render(context)}
-      </div>
-    `;
+      </main>
+
+      <footer class="tools">
+        🔧 Ferramentas:
+        <button>Chave inglesa</button>
+        <button>Chave de roda</button>
+      </footer>
+
+    </div>
+  `;
   }
 }
 

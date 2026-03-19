@@ -9,7 +9,7 @@ import { ShopUI } from "./ui/ShopUI.js";
 import { JobUI } from "./ui/JobUI.js";
 
 import { JobSystem } from "./systems/JobSystem.js";
-import { ProblemSystem } from "./systems/ProblemSystem.js";
+import ProblemSystem from "./systems/ProblemSystem.js";
 
 const problemSystem = new ProblemSystem();
 

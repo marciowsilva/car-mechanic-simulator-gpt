@@ -8,6 +8,8 @@ import ProblemSystem from "./systems/ProblemSystem.js";
 import DiagnosisSystem from "./systems/DiagnosisSystem.js";
 import TestSystem from "./systems/TestSystem.js";
 import JobSystem from "./systems/JobSystem.js";
+import InventorySystem from "./systems/InventorySystem.js";
+import ShopSystem from "./systems/ShopSystem.js";
 
 // =========================
 // 🚗 ESTADO DO JOGO
@@ -32,6 +34,9 @@ const jobSystem = new JobSystem(problemSystem);
 let money = 0;
 window.money = money;
 
+const inventory = new InventorySystem();
+const shop = new ShopSystem(inventory);
+
 // =========================
 // 🖥️ UI MANAGER
 // =========================
@@ -39,6 +44,8 @@ const ui = new UIManager("app");
 
 ui.register("garage", new GarageScreen());
 ui.register("client", new ClientScreen());
+ui.register("inventory", new InventoryScreen());
+ui.register("shop", new ShopScreen());
 ui.register("inventory", new InventoryScreen());
 ui.register("shop", new ShopScreen());
 
@@ -56,7 +63,7 @@ function init() {
 // 🔄 NAVEGAÇÃO
 // =========================
 window.navigate = function (screen) {
-  ui.show(screen, { car, problemSystem, jobSystem });
+  ui.show(screen, { car, problemSystem, jobSystem, inventory, shop });
 };
 
 // =========================
@@ -117,6 +124,29 @@ window.completeJob = function () {
   }
 
   ui.show("client", { jobSystem });
+};
+
+window.buyPart = function (id) {
+  shop.buy(id);
+  ui.show("shop", { shop });
+};
+
+window.installPart = function (id) {
+  if (!inventory.has(id)) {
+    alert("Você não tem essa peça!");
+    return;
+  }
+
+  const part = car.parts.find((p) => p.id === id);
+
+  if (!part) return;
+
+  inventory.remove(id);
+  part.condition = 1;
+
+  problemSystem.update(car);
+
+  ui.show("garage", { car, problemSystem, inventory });
 };
 
 // =========================

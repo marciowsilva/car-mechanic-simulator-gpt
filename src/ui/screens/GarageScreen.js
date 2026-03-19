@@ -33,7 +33,7 @@ class GarageScreen {
       html += `
       <div class="card">
         ${part.name} - ${Math.round(part.condition * 100)}%
-        <button onclick="repairPart('${part.id}')">Reparar</button>
+        <button onclick="installPart('${part.id}')">Instalar peça</button>
       </div>
     `;
     });

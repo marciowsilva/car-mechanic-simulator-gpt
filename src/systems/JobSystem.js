@@ -21,18 +21,27 @@ export const JobSystem = {
 
     const type = this.currentJob.problem;
 
+    let fixed = false;
+
     for (const slot in car.slots) {
       const part = car.slots[slot];
 
-      if (part && part.type === type) {
-        GameState.money += this.currentJob.reward;
-
-        Notifications.show("Serviço concluído!");
-
-        this.createJob();
-
-        return;
+      if (part && part.type === type && part.condition > 0) {
+        fixed = true;
       }
+
+      if (part && part.type === type && part.condition <= 0) {
+        fixed = false;
+        break;
+      }
+    }
+
+    if (fixed) {
+      GameState.money += this.currentJob.reward;
+
+      Notifications.show("Serviço concluído!");
+
+      this.createJob();
     }
   },
 };

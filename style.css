@@ -1,0 +1,47 @@
+body {
+  font-family: Arial;
+  background: #1e1e1e;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background: #111;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+main {
+  display: flex;
+  gap: 40px;
+  padding: 20px;
+}
+
+#garage,
+#inventory {
+  background: #2b2b2b;
+  padding: 20px;
+  border-radius: 10px;
+  width: 50%;
+}
+
+button {
+  padding: 8px 12px;
+  margin: 4px;
+  cursor: pointer;
+}
+
+#notifications {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+}
+
+.notification {
+  background: #333;
+  padding: 10px 14px;
+  margin-top: 10px;
+  border-radius: 6px;
+}

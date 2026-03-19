@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Car Mechanic Simulator</title>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <header>
+      <h1>Car Mechanic Simulator</h1>
+
+      <div id="money">💰 Dinheiro: $<span id="money-value">0</span></div>
+    </header>
+
+    <main>
+      <section id="garage">
+        <h2>🚗 Garagem</h2>
+
+        <div id="car-view"></div>
+      </section>
+
+      <section id="job">
+        <h2>👨‍🔧 Cliente</h2>
+
+        <div id="job-description">Nenhum cliente no momento</div>
+      </section>
+
+      <section id="inventory">
+        <h2>📦 Inventário</h2>
+
+        <div id="inventory-list"></div>
+      </section>
+
+      <section id="shop">
+        <h2>🛒 Loja de Peças</h2>
+
+        <div id="shop-list"></div>
+      </section>
+    </main>
+
+    <div id="notifications"></div>
+
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>

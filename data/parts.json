@@ -1,0 +1,20 @@
+[
+    {
+        "id": "engine_i4",
+        "name": "Motor I4",
+        "type": "engine",
+        "price": 800
+    },
+    {
+        "id": "battery_basic",
+        "name": "Bateria básica",
+        "type": "battery",
+        "price": 150
+    },
+    {
+        "id": "wheel_standard",
+        "name": "Roda padrão",
+        "type": "wheel",
+        "price": 120
+    }
+]

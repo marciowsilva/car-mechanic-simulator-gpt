@@ -1,19 +1,19 @@
 import { GameState } from "../core/GameState.js";
 import { GarageUI } from "./GarageUI.js";
+import { JobSystem } from "../systems/JobSystem.js";
 
 export const InventoryUI = {
   render() {
     const list = document.getElementById("inventory-list");
-
     list.innerHTML = "";
 
     GameState.inventory.forEach((part) => {
       const div = document.createElement("div");
 
       div.innerHTML = `
-${part.name}
-<button>Instalar</button>
-`;
+            ${part.name}
+            <button>Instalar</button>
+            `;
 
       div.querySelector("button").onclick = () => {
         const car = GameState.currentCar;
@@ -23,6 +23,8 @@ ${part.name}
             car.install(slot, part);
 
             GameState.inventory = GameState.inventory.filter((p) => p !== part);
+
+            JobSystem.checkCompletion(car);
 
             GarageUI.render();
             this.render();

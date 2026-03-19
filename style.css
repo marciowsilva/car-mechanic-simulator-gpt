@@ -3,33 +3,30 @@ body {
   background: #1e1e1e;
   color: white;
   margin: 0;
-  padding: 0;
 }
 
 header {
-  background: #111;
-  padding: 15px;
   display: flex;
   justify-content: space-between;
+  padding: 15px;
+  background: #111;
 }
 
 main {
   display: flex;
-  gap: 40px;
+  gap: 20px;
   padding: 20px;
 }
 
-#garage,
-#inventory {
+section {
   background: #2b2b2b;
-  padding: 20px;
+  padding: 15px;
   border-radius: 10px;
-  width: 50%;
+  width: 25%;
 }
 
 button {
-  padding: 8px 12px;
-  margin: 4px;
+  margin-top: 5px;
   cursor: pointer;
 }
 
@@ -41,7 +38,7 @@ button {
 
 .notification {
   background: #333;
-  padding: 10px 14px;
+  padding: 10px;
   margin-top: 10px;
-  border-radius: 6px;
+  border-radius: 5px;
 }

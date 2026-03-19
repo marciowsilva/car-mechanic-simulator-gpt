@@ -5,8 +5,7 @@ export const JobUI = {
     const el = document.getElementById("job-description");
 
     if (!JobSystem.currentJob) {
-      el.innerText = "Nenhum cliente";
-
+      el.innerText = "Sem cliente";
       return;
     }
 

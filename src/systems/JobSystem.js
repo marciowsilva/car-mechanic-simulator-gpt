@@ -6,30 +6,14 @@ export const JobSystem = {
 
   createJob() {
     const jobs = [
-      {
-        problem: "battery",
-        reward: 300,
-        description: "Trocar bateria",
-      },
-
-      {
-        problem: "engine",
-        reward: 900,
-        description: "Trocar motor",
-      },
-
-      {
-        problem: "wheel",
-        reward: 200,
-        description: "Trocar roda",
-      },
+      { problem: "engine", reward: 900, description: "Trocar motor" },
+      { problem: "battery", reward: 300, description: "Trocar bateria" },
+      { problem: "wheel", reward: 200, description: "Trocar roda" },
     ];
 
-    const job = jobs[Math.floor(Math.random() * jobs.length)];
+    this.currentJob = jobs[Math.floor(Math.random() * jobs.length)];
 
-    this.currentJob = job;
-
-    Notifications.show("Cliente chegou: " + job.description);
+    Notifications.show("Novo cliente!");
   },
 
   checkCompletion(car) {
@@ -43,9 +27,7 @@ export const JobSystem = {
       if (part && part.type === type) {
         GameState.money += this.currentJob.reward;
 
-        Notifications.show("Serviço concluído! +$" + this.currentJob.reward);
-
-        this.currentJob = null;
+        Notifications.show("Serviço concluído!");
 
         this.createJob();
 

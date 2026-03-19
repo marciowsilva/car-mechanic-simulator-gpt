@@ -1,7 +1,6 @@
 export class Car {
-  constructor(data) {
-    this.id = data.id;
-    this.name = data.name;
+  constructor(name) {
+    this.name = name;
 
     this.slots = {
       engine: null,
@@ -14,15 +13,13 @@ export class Car {
     };
   }
 
-  installPart(slot, part) {
+  install(slot, part) {
     this.slots[slot] = part;
   }
 
-  removePart(slot) {
+  remove(slot) {
     const part = this.slots[slot];
-
     this.slots[slot] = null;
-
     return part;
   }
 }

@@ -4,7 +4,5 @@ export class Part {
     this.name = data.name;
     this.type = data.type;
     this.price = data.price;
-
-    this.condition = 100;
   }
 }

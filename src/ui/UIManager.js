@@ -20,7 +20,7 @@ class UIManager {
     <div class="layout">
 
       <header class="header">
-        <h1>🔧 Car Mechanic Simulator</h1>
+        <h1>🔧 Car Mechanic Simulator - GPT</h1>
         <div class="money">💰 $${window.money || 0}</div>
       </header>
 

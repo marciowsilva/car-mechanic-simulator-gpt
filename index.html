@@ -2,7 +2,7 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <title>Car Mechanic Simulator</title>
+    <title>Car Mechanic Simulator - GPT</title>
 
     <style>
       body {
@@ -63,6 +63,78 @@
 
       button {
         margin-right: 5px;
+      }
+
+      .car {
+        position: relative;
+        width: 300px;
+        height: 200px;
+        margin: 20px auto;
+        background: #333;
+        border-radius: 10px;
+      }
+
+      .car-body {
+        text-align: center;
+        font-size: 40px;
+        padding-top: 60px;
+      }
+
+      .part {
+        position: absolute;
+        cursor: pointer;
+        font-size: 24px;
+      }
+
+      .wheel {
+        bottom: 10px;
+        left: 20px;
+      }
+
+      .brake {
+        bottom: 10px;
+        right: 20px;
+      }
+
+      .engine {
+        top: 10px;
+        left: 120px;
+      }
+
+      .battery {
+        top: 50px;
+        right: 20px;
+      }
+
+      .part:hover {
+        transform: scale(1.2);
+      }
+
+      .part {
+        position: absolute;
+        cursor: pointer;
+        font-size: 24px;
+        transition: 0.2s;
+      }
+
+      /* 🟢 pode interagir */
+      .part.ok {
+        color: #00ff88;
+      }
+
+      /* 🔴 bloqueado */
+      .part.blocked {
+        color: #ff4444;
+      }
+
+      /* 🟡 ferramenta errada */
+      .part.wrong {
+        color: #ffcc00;
+      }
+
+      /* hover */
+      .part:hover {
+        transform: scale(1.2);
       }
     </style>
   </head>
